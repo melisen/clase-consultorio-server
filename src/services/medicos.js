@@ -1,18 +1,49 @@
-// no vamos a usar fetch porque no hacemos request http, ni import statement de Node para leer json. Vamos a usar file system para poder modificar el json y hacer el CRUD
+//*File System para modificar el archivo de persistencia
+//*requerimos la clase para usar sus métodos
+const {Medicos} = require('../models/medicosFileSystem.js')
+const medicosFS = new Medicos();
 
-const Administracion = require("../models/administracion");
-const adminModel = new Administracion("./public/medicos.json")
+//*CRUD Medicos
+const crearMedico = async(nuevo)=>{
+    const { nombre, apellido, especialidad, consultorio } = nuevo;
+    const medico = { nombre, apellido, especialidad, consultorio };
+    //medico llega bien
+    const creado = await medicosFS.saveNew(medico)
+    return creado;
+}
+//crearMedico("Gabriela", "Fernández", "Traumatología", 4)
 
-
-const verTodosServices = async () =>{
-    const arrMedicos = await adminModel.verTodos() 
-    console.log(arrMedicos)
-    return arrMedicos
+const verTodosLosMedicos = async()=>{
+    const todos = await medicosFS.getAll()
+    console.log(todos)
 }
 
 
+const buscarMedico = async(id)=>{
+const medico = await medicosFS.findById(id)
+return medico
+}
+//const medicoBuscado = buscarMedico(3)
+//console.log(medicoBuscado)
 
+const modificarConsultorioMedico = async(id, consultorio)=>{
+    const modificado = await medicosFS.updateOffice(id, consultorio)
+    if(modificado){
+        console.log("consultorio modificado con éxito")
+    }else{
+        console.log("No se pudo modificar")
+    }
 
+}
+//modificarConsultorioMedico(3, 6)
+
+const eliminarMedico = async(id)=>{
+const eliminado = await medicosFS.deleteById(id)
+console.log(eliminado)
+}
+//eliminarMedico(3)
+
+/*
 const buscarAgendaMedicoServices = async (id)=>{
     try{
         const medico = await adminModel.verSegunId(id)
@@ -24,8 +55,17 @@ const buscarAgendaMedicoServices = async (id)=>{
     }
     
 }
+*/
 
-    module.exports = {buscarAgendaMedicoServices, verTodosServices};
+/*
+const verTodosServices = async () =>{
+    const arrMedicos = await adminModel.verTodos() 
+    console.log(arrMedicos)
+    return arrMedicos
+}
+*/
+
+    module.exports = {crearMedico};
 
 
 
