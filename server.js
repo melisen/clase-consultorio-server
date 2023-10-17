@@ -1,5 +1,8 @@
 const config = require("./src/config/config");
 const express = require("express")
+const medicosRouter = require("./src/routes/medicos");
+const pacientesRouter = require("./src/routes/pacientes");
+
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -7,8 +10,10 @@ app.use(express.json());
 const {middlewareCORS} =require("./src/middlewares/middlewares.js")
 app.use(middlewareCORS)
 
-const medicosRouter = require("./src/routes/medicos");
+
 app.use("/api/medicos", medicosRouter);
+
+app.use("/api/pacientes", pacientesRouter);
 
 
 

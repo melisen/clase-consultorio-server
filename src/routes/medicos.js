@@ -3,16 +3,23 @@ const { Router } = express;
 const medicosRouter = Router();
 
 
-const {agendaMedicoController, crearMedicoController, verTodosController, modificarPaciente} = require("../controllers/medicos");
+const {verTodosMedicosController, verAgendaMedicoController, crearMedicoController, modificarMedicoController, eliminarMedicoController} = require("../controllers/medicos");
 
 
 
-medicosRouter.get("/", verTodosController);
 
 
-medicosRouter.get("/1", agendaMedicoController)
+
+medicosRouter.get("/", verTodosMedicosController)
+medicosRouter.get("/agenda", verAgendaMedicoController)
+
 medicosRouter.post("/crear", crearMedicoController)
-medicosRouter.post("/jimena/modificar", modificarPaciente);
+
+medicosRouter.put("/modificar", modificarMedicoController);
+
+medicosRouter.delete("/", eliminarMedicoController)
+
+
 
 
 module.exports = medicosRouter;

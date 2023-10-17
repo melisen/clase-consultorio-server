@@ -1,61 +1,54 @@
 //*File System para modificar el archivo de persistencia
 //*requerimos la clase para usar sus métodos
 const {Medicos} = require('../models/medicosFileSystem.js')
-const medicosFS = new Medicos();
+const MedicosFS = new Medicos();
 
 //*CRUD Medicos
-const crearMedico = async(nuevo)=>{
-    const { nombre, apellido, especialidad, consultorio } = nuevo;
+const crearMedico = async(nombre, apellido, especialidad, consultorio)=>{
     const medico = { nombre, apellido, especialidad, consultorio };
-    //medico llega bien
-    const creado = await medicosFS.saveNew(medico)
+    const creado = await MedicosFS.saveNew(medico)
     return creado;
 }
 //crearMedico("Gabriela", "Fernández", "Traumatología", 4)
 
-const verTodosLosMedicos = async()=>{
-    const todos = await medicosFS.getAll()
-    console.log(todos)
+const verTodos = async()=>{
+    const todos = await MedicosFS.getAll()
+    return todos
 }
 
 
 const buscarMedico = async(id)=>{
-const medico = await medicosFS.findById(id)
+const medico = await MedicosFS.findById(id)
 return medico
 }
 //const medicoBuscado = buscarMedico(3)
 //console.log(medicoBuscado)
 
 const modificarConsultorioMedico = async(id, consultorio)=>{
-    const modificado = await medicosFS.updateOffice(id, consultorio)
-    if(modificado){
-        console.log("consultorio modificado con éxito")
-    }else{
-        console.log("No se pudo modificar")
-    }
+    const modificado = await MedicosFS.updateOffice(id, consultorio)
+    return modificado 
 
 }
 //modificarConsultorioMedico(3, 6)
 
 const eliminarMedico = async(id)=>{
-const eliminado = await medicosFS.deleteById(id)
-console.log(eliminado)
+const eliminado = await MedicosFS.deleteById(id)
+return eliminado
 }
 //eliminarMedico(3)
 
-/*
-const buscarAgendaMedicoServices = async (id)=>{
-    try{
-        const medico = await adminModel.verSegunId(id)
 
-        const agendaMedico = medico.agenda        
+const verAgendaMedico = async (id)=>{
+    try{
+        const medico = await MedicosFS.findById(id)
+        const agendaMedico = medico.agenda
         return agendaMedico
     } catch(err){
-        console.error("No se encontró un médico con ese nombre y apellido")
+        console.error("No se pudo leer la agenda")
     }
     
 }
-*/
+
 
 /*
 const verTodosServices = async () =>{
@@ -65,7 +58,7 @@ const verTodosServices = async () =>{
 }
 */
 
-    module.exports = {crearMedico};
+    module.exports = {verTodos, crearMedico, verAgendaMedico, modificarConsultorioMedico, eliminarMedico};
 
 
 

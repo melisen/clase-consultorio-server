@@ -24,24 +24,29 @@ class Medicos{
           async saveNew(obj) {
             try {
               const objs = await this.getAll();
-
-              let id;
-              if (!objs || !objs.length) {
-                id = 1;
-              } else {
-                objs.forEach((ob) => {
-                  id = ob.id;
-                });
-                id = id + 1;
+              let existe = objs.find((item)=> item.nombre ===obj.nombre && item.apellido === obj.apellido)
+              if(existe){
+                console.log("Este médico ya existe en el archivo")
+              }else{
+                let id;
+                if (!objs || !objs.length) {
+                  id = 1;
+                } else {
+                  objs.forEach((ob) => {
+                    id = ob.id;
+                  });
+                  id = id + 1;
+                }
+                const agenda = [];
+                const guardar = objs.length > 0 ? [...objs, { ...obj, id, agenda }] : [{ ...obj, id, agenda }];
+                const guardado = await fs.promises.writeFile(
+                  this.ruta,
+                  JSON.stringify(guardar),
+                  { encoding: "utf-8" }
+                );
+                return id
               }
-              const agenda = [];
-              const guardar = objs.length > 0 ? [...objs, { ...obj, id, agenda }] : [{ ...obj, id, agenda }];
-              const guardado = await fs.promises.writeFile(
-                this.ruta,
-                JSON.stringify(guardar),
-                { encoding: "utf-8" }
-              );
-              console.log( "guardado");
+
             } catch (error) {
               console.log("no se pudo guardar");
             }
@@ -53,11 +58,9 @@ class Medicos{
               const buscado = todos.find((ob) => ob.id == id);
               if (buscado) {
                 return buscado;
-              } else {
-                console.log("no existe");
-              }
+              } 
             } catch (err) {
-              console.log("no se pudo buscar por id");
+              return"no se pudo buscar por id";
             }
           }
 
@@ -68,7 +71,6 @@ class Medicos{
                 const todos = await this.getAll();
                 const quitarObj = todos.filter((item) => item.id != id);
                 const newArr = [...quitarObj, medico];
-                console.log(newArr)
                 await fs.promises.writeFile(this.ruta, JSON.stringify(newArr), {
                   encoding: "utf-8",
                 });
@@ -91,7 +93,7 @@ class Medicos{
                   JSON.stringify(newArr),
                   { encoding: "utf-8" }
                 );
-                return "eliminado";
+                return id;
               }
             } catch (err) {
               console.log( "no se pudo eliminar");
